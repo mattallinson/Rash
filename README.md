@@ -4,10 +4,10 @@ Slowly but surely I will build a game of Risk that will be playable online.
 Version 1 will be coded in python and playable in the command line. 
 
 ## Table of Contents
-* [Risk Roller](#RiskRoller])
-* [Map](#Map)
-* [Game Mechanics] (#game-mechanics) 
-* [AI Mechanics](#AI-Mechanics)
+* [Risk Roller](##RiskRoller])
+* [Map](##Map)
+* [Game Mechanics](##game-mechanics) 
+* [AI Mechanics](##AI-Mechanics)
 
 
 ## RiskRoller
