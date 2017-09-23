@@ -48,9 +48,9 @@ for p in players: #Assign countries to player
 
 table_data = [
 	[player_1['name'],player_2['name'],player_3['name']],
-	[[k for k in player_1['countries']][0],[k for k in player_2['countries']][0], [k for k in player_3['countries']][0]]
-	[[k for k in player_1['countries']][1],[k for k in player_2['countries']][1], [k for k in player_3['countries']][1]]
-	#[[k for k in player_1['countries']][2],[k for k in player_2['countries']][2], [k for k in player_3['countries']][2]]
+	[[k for k in player_1['countries']][0],[k for k in player_2['countries']][0], [k for k in player_3['countries']][0]],
+	[[k for k in player_1['countries']][1],[k for k in player_2['countries']][1], [k for k in player_3['countries']][1]],
+	[[k for k in player_1['countries']][2],[k for k in player_2['countries']][2], [k for k in player_3['countries']][2]]
 ]
 
 table = AsciiTable(table_data)

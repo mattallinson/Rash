@@ -1,8 +1,9 @@
-while True:
-	try:
-		num_armies = int(input('How many armies would you like to reinforce by?'))
-		break
-	except ValueError:
-		print('please enter an integer number')
-
-print('you would like to reinforce by', num_armies,'armies')
+max_armies = 5
+while max_armies > 0:
+	armies_to_reinforce = int(input('How many armies would you like to reinforce with? > '))
+	if armies_to_reinforce > max_armies:
+		print('ERROR: you only have', max_armies, 'to reinforce with')
+	else:
+		max_armies -= armies_to_reinforce
+	
+print('reinforcement complete')
