@@ -20,7 +20,7 @@ attacker = int(input('Number of attacking armies:'))
 defender = int(input('Number of defending armies:'))
 
 # While Loop
-game_round = 1
+attack_round = 1
 while attacker > 3 and defender > 0:
 	# rolls 3 dice for attacker
 	attacker_dice = dice_roll(3)
@@ -32,7 +32,7 @@ while attacker > 3 and defender > 0:
 	else :
 		defender_dice = dice_roll(1)
 
-	print('ROUND:', game_round, 'Attacker has', attacker, 'armies. Defenders has', defender,'armies.')
+	print('ROUND:', attack_round, 'Attacker has', attacker, 'armies. Defenders has', defender,'armies.')
 	print("Attacker Dice = ", attacker_dice)	
 	print("Defender Dice = ", defender_dice)
 
@@ -49,10 +49,10 @@ while attacker > 3 and defender > 0:
 			attack_lose += 1
 			attacker -= 1
 	print('Defender loses: ', defender_lose , ' Attacker loses: ', attack_lose)
-	game_round += 1
+	attack_round += 1
  
 #If defender = 0 or attacker = 3, outputs the response
-print('\n#####################\nAfter:',game_round,'rounds.') #LINE BREAK
+print('\n#####################\nAfter:',attack_round,'rounds.') #LINE BREAK
 
 if attacker <= 3:
 	print('DEFENDER WINS. Attacker has', attacker, 'armies remaining. Defender has', defender,'armies remaining.' )

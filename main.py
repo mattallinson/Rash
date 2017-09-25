@@ -1,5 +1,8 @@
+#!/usr/bin/python3
+
 import random
 import os
+import math
 from terminaltables import AsciiTable
 
 class territory():
@@ -13,6 +16,12 @@ class territory():
 	def output(self):
 		return ("%s  \n%s : %s armies" %(self.name, self.owner, self.armies))
 
+class player():
+
+	def __init__(self,name,country_count):
+		self.name = name
+		self.country_count = country_count
+
 
 def makeCountries(country_name, neighbours):
 	country = territory(str(country_name),neighbours, None, 1)
@@ -22,12 +31,14 @@ def makeCountries(country_name, neighbours):
 def countrySelector(player):
 	random_country = random.choice(available_countries)
 	available_countries.remove(random_country)
-	countries_data[random_country].owner = player
+	countries_data[random_country].owner = player.name
+	player.country_count += 1
+
 
 def player_input_own_country(player):
 	while True:
-			player_input_country = input(player + ', What country would you like to reinforce? >').title()
-			if player_input_country in countries and countries_data[player_input_country].owner == player:
+			player_input_country = input(player.name + ', What country would you like to reinforce? >').title()
+			if player_input_country in countries and countries_data[player_input_country].owner == player.name:
 				break
 			else:
 				print('ERROR: Please enter a country you own.')
@@ -37,7 +48,7 @@ def player_input_own_country(player):
 def player_input_army_size(player,max_army_size, army_type):
 	while True:
 		try:
-			player_input_army = int(input(player + ', Please enter size of ' + army_type + '. You have ' +str(max_army_size)' armies remaining > '))
+			player_input_army = int(input(str(player.name) + ', Please enter size of ' + army_type + ' You have ' +str(max_army_size) + ' armies remaining > '))
 			if player_input_army <= max_army_size and player_input_army > 0:
 				break
 			else:
@@ -49,7 +60,9 @@ def player_input_army_size(player,max_army_size, army_type):
 
 
 
-def reinforce(player,max_armies):
+def reinforce(player):
+	max_armies = math.floor(player.country_count/3)+3
+
 	while max_armies > 0:
 
 		country_to_reinforce = player_input_own_country(player)
@@ -63,9 +76,9 @@ def reinforce(player,max_armies):
 		countries_data[country_to_reinforce].armies += armies_to_reinforce
 		max_armies -= armies_to_reinforce
 
-	print('Reinforcement for', player, 'is complete.')
+	print('Reinforcement for', player.name, 'is complete.')
 
-def print_playing_board():
+def print_playing_board(): #I would love for this to be able any size map
 
 	table_data = [
 	['map', ''],
@@ -79,28 +92,33 @@ def print_playing_board():
 def main():
 	game_round = 1
 
-	for p in players: # Player 1 goes first
-	print('Round', game_round, '.', p ,'\'s turn to attack.')
-		if game_round != 1: #Delete this for boards bigger than 2 countries
-			reinforce(p,3)
-			print_playing_board()
+	while player_1.country_count >0 or player_2.country_count > 0:
+		for p in players: # Player 1 goes first
+			print('Round', math.floor(game_round), '.', p.name + '\'s turn to attack.')
+			
+			if len(countries) == 2:
+				if math.floor(game_round) != 1:
+						reinforce(p)
+						print_playing_board()
+			else:
+				reinforce(p)
+				print_playing_board()
 
-		# Player 1 choses which country to attack 
+			'''
+			########################
 
-		# Uses Risk_Roller to calculate the result
+			INSERT REST OF GAME HERE
 
-		# Changes the number of armies in the respective territories
+			########################
 
-		# Player 2 goes second
+			'''
 
-			# Repeats steps above
+
+			game_round +=0.5
 
 	# Else (one player has lost all her countries)
 		
-		#Game Over, player who has won wins!
-
-
-
+		#Game Over, player [who has won] wins!
 
 #INITIALISES MAP
 map = {
@@ -109,7 +127,7 @@ map = {
 }
 
 countries_data = {} # returns a dictionary in the form {Country: <territoryObject>}
-for c in [makeCountries(key,value) for key, value in map.items()]:
+for c in [makeCountries(country_name,neighbours) for country_name, neighbours in map.items()]:
 	countries_data[str(c.name)] = c
 
 countries = [c for c in countries_data.keys()]
@@ -117,8 +135,8 @@ available_countries = list(countries)
 
 #INITIALISES PLAYERS
 
-player_1 = input('Enter name for Player 1 > ').title()
-player_2 = input('Enter name for Player 2 > ').title()
+player_1 = player(input('Enter name for Player 1 > ').title(),0)
+player_2 = player(input('Enter name for Player 2 > ').title(),0)
 players = [player_1, player_2]
 
 #INITIALISES STARTING POSITIONS
@@ -130,10 +148,10 @@ print_playing_board()
 
 #OPENING REINFORCEMENT
 for p in players:  
-	reinforce(p,3)
+	reinforce(p)
 
 print_playing_board()
 
 # LET THE BATTLE COMMENCE
 if __name__ == '__main__':
-main()
+	main()
