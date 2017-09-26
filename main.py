@@ -73,7 +73,7 @@ def reinforce(player):
 		countries_data[country_to_reinforce].armies += armies_to_reinforce
 		max_armies -= armies_to_reinforce
 
-	print('Reinforcement for', player.name, 'is complete.')
+	print('Reinforcement for', player.name, 'is complete.\n')
 
 def print_playing_board(): #I would love for this to be able any size map
 
@@ -107,12 +107,15 @@ def attack(player):
 
 	if attack_result['defender_armies'] == 0: # if attacker wins
 		print(player.name, 'wins with', attack_result['attacker_armies'], 'armies remaining' )
-		countries_data[defending_country].owner = player.name
+		countries_data[defending_country].owner.name = player.name
+		player.country_count += 1
+		countries_data[defending_country].owner.country_count -= 1
+		if countries_data[defending_country].owner.country_count == 0:
+			return
 		number_of_occupying_armies = player_input_number(player, attack_result['attacker_armies']-1, attack_result['attacker_dice_count'] ,'the number of armies you want to move')
 		countries_data[defending_country].armies = number_of_occupying_armies
 		countries_data[attacking_from].armies =  attack_result['attacker_armies'] - number_of_occupying_armies
-		player.country_count += 1
-		countries_data[defending_country].owner.country_count -= 1
+
 		
 	else: # if defender wins
 		print('Attack stopped. ', player.name, 'has', attack_result['attacker_armies'], 'armies remaining. ', countries_data[defending_country].owner.name, 'has ', attack_result['defender_armies'], 'remaining.')
@@ -149,19 +152,23 @@ def main():
 				if attack_this_round == 'y':
 					attack(p)
 					print_playing_board()
+					if player_1.country_count == 0 or player_2.country_count == 0:
+						break
 				else:
 					break
 
 			print('round for', p.name, 'complete.')
 			round_count +=0.5
 	
-	if player_1.country_count == 0:
-		print_playing_board()
-		print('After',str(round_count),'rounds.',player_2.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+		if player_1.country_count == 0:
+			print_playing_board()
+			print('After',str(round_count),'rounds.',player_2.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+			return
 
-	if player_2.country_count == 0:
-		print_playing_board()
-		print('After',str(round_count),'rounds.',player_1.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+		elif player_2.country_count == 0:
+			print_playing_board()
+			print('After',str(round_count),'rounds.',player_1.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+			return
 
 
 #INITIALISES MAP
