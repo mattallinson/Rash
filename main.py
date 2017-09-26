@@ -4,6 +4,7 @@ import random
 import os
 import math
 from terminaltables import AsciiTable
+import RiskRoller as rr 
 
 class territory():
 
@@ -88,6 +89,27 @@ def print_playing_board(): #I would love for this to be able any size map
 	table = AsciiTable(table_data)
 
 	print(table.table)
+
+def player_input_enemy_country(attacking_country, player):
+	while True:
+		player_input_country = input(player.name + ', What country would you like to attack? >').title()
+		if player_input_country in countries and countries_data[player_input_country].owner =! player.name and attacking_country in countries_data[player_input_country].neighbours:
+				break
+			else:
+				print('ERROR: Please enter a valid country you can attack from', attacking_country)
+	
+	return (player_input_country)
+
+def attack(player):
+	
+	attacking_from = player_input_own_country(player) #ask player which country they want to attack from
+	defending_country = player_input_enemy_country(attacking_from, player) #asks player which country they would like to attack
+	#asks player what point to stop the attack
+
+
+	#asks player how many dice they would like to use
+
+	#calls risk roller
 
 def main():
 	game_round = 1
