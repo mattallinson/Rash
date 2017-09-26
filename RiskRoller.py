@@ -14,20 +14,23 @@ def dice_roll(number_of_dice): #returns a list of randomly generated numbers bet
 
 	return (result)
 
-def attack(attacker_armies, defender_armies,attack_stop,attacker_number_of_dice):
+def attack(attacker_armies, defender_armies,attacker_number_of_dice,attack_stop):
 	attack_round = 1
 
 
 	while attacker_armies > attack_stop and defender_armies > 0:
-		# rolls  dice for attacker
-		if attacker_armies >= 3:
-			attacker_dice = dice_roll(3)
-		elif attacker_armies == 2 or attacker_number_of_dice == 2:
-			attacker_dice = dice_roll(2)
-		elif attacker_armies == 1 or attacker_number_of_dice == 1:
-			attacker_dice = dice_roll(1)
+		# rolls  dice for attacker after working out how many dice are going to be rolled wich is super annoying
+		if attacker_armies == 2 or attacker_number_of_dice == 1:
+			attacker_dice_count = 1
+		elif attacker_armies == 3 or attacker_number_of_dice == 2:
+			attacker_dice_count = 2			
+		else: 
+			attacker_dice_count = 3
+		
+		attacker_dice = dice_roll(attacker_dice_count)
 
-		# rolls 2 dice if attacker has >2 armies
+
+		# rolls 2 dice if attacker has >=2 armies
 		if defender_armies >= 2:
 			defender_dice = dice_roll(2)	
 		# else rolls 1 die
@@ -41,7 +44,8 @@ def attack(attacker_armies, defender_armies,attack_stop,attacker_number_of_dice)
 		# calculates who wins for each roll
 		defender_lose = 0
 		attack_lose = 0
-		for i in range(len(defender_dice)):		
+		dice_iterater = min(len(defender_dice), attacker_dice_count)
+		for i in range(dice_iterater):		
 			if attacker_dice[i] > defender_dice[i]:
 				#attacker wins
 				defender_lose += 1
@@ -53,9 +57,7 @@ def attack(attacker_armies, defender_armies,attack_stop,attacker_number_of_dice)
 		print('Defender loses: ', defender_lose , ' Attacker loses: ', attack_lose)
 		attack_round += 1
 
-	return{'round':attack_round, 'attacker_armies':attacker_armies, 'defender_armies': defender_armies}
-
-
+	return{'round':attack_round, 'attacker_armies':attacker_armies, 'defender_armies': defender_armies, 'attacker_dice_count' : attacker_dice_count}
 
 def main():	
 	#get initial number of armies

@@ -15,14 +15,13 @@ class territory():
 		self.armies = armies
 
 	def output(self):
-		return ("%s  \n%s : %s armies" %(self.name, self.owner, self.armies))
+		return ("%s  \n%s : %s armies" %(self.name, self.owner.name, self.armies))
 
 class player():
 
 	def __init__(self,name,country_count):
 		self.name = name
 		self.country_count = country_count
-
 
 def makeCountries(country_name, neighbours):
 	country = territory(str(country_name),neighbours, None, 1)
@@ -32,46 +31,43 @@ def makeCountries(country_name, neighbours):
 def countrySelector(player):
 	random_country = random.choice(available_countries)
 	available_countries.remove(random_country)
-	countries_data[random_country].owner = player.name
+	countries_data[random_country].owner = player
 	player.country_count += 1
 
-
-def player_input_own_country(player):
+def player_input_own_country(player, message):
 	while True:
-			player_input_country = input(player.name + ', What country would you like to reinforce? >').title()
-			if player_input_country in countries and countries_data[player_input_country].owner == player.name:
+			player_input_country = input(player.name + ', What country would you like to ' + message +'?  >').title()
+			if player_input_country in countries and countries_data[player_input_country].owner.name == player.name:
 				break
 			else:
 				print('ERROR: Please enter a country you own.')
 	
 	return (player_input_country)
 
-def player_input_army_size(player,max_army_size, army_type):
+def player_input_number(player,max_number, min_number, message):
 	while True:
 		try:
-			player_input_army = int(input(str(player.name) + ', Please enter size of ' + army_type + ' You have ' +str(max_army_size) + ' armies remaining > '))
-			if player_input_army <= max_army_size and player_input_army > 0:
+			player_input_number = int(input(str(player.name) + ', Please enter '  + message  + '. Maximum: ' +str(max_number) + '>'))
+			if player_input_number <= max_number and player_input_number >= min_number:
 				break
 			else:
-				print('ERROR: Please enter an army bigger than 0 and smaller than or equal to ' + str(max_army_size))
+				print('ERROR: Please enter a number bigger than ' + str(min_number) + 'and smaller than or equal to ' + str(max_number))
 		except:
 			print('ERROR: Please enter an integer number')
 
-	return (player_input_army)
-
-
+	return (player_input_number)
 
 def reinforce(player):
 	max_armies = math.floor(player.country_count/3)+3
 
 	while max_armies > 0:
 
-		country_to_reinforce = player_input_own_country(player)
+		country_to_reinforce = player_input_own_country(player, 'reinforce')
 		
 		if max_armies == 1:
 			armies_to_reinforce = 1
 		else:
-			armies_to_reinforce = player_input_army_size(player,max_armies,'reinforcements.')
+			armies_to_reinforce = player_input_number(player,max_armies,0,'size of reinforcements')
 
 		print('Reinforcing', countries_data[country_to_reinforce].name, 'with', armies_to_reinforce ,'armies.')
 		countries_data[country_to_reinforce].armies += armies_to_reinforce
@@ -93,54 +89,80 @@ def print_playing_board(): #I would love for this to be able any size map
 def player_input_enemy_country(attacking_country, player):
 	while True:
 		player_input_country = input(player.name + ', What country would you like to attack? >').title()
-		if player_input_country in countries and countries_data[player_input_country].owner =! player.name and attacking_country in countries_data[player_input_country].neighbours:
-				break
-			else:
-				print('ERROR: Please enter a valid country you can attack from', attacking_country)
+		if player_input_country in countries and countries_data[player_input_country].owner.name != player.name and attacking_country in countries_data[player_input_country].neighbours:
+			break
+		else:
+			print('ERROR: Please enter a valid country you can attack from', attacking_country)
 	
 	return (player_input_country)
 
 def attack(player):
 	
-	attacking_from = player_input_own_country(player) #ask player which country they want to attack from
-	defending_country = player_input_enemy_country(attacking_from, player) #asks player which country they would like to attack
-	#asks player what point to stop the attack
+	attacking_from = player_input_own_country(player,'attack from') # ask player which country they want to attack from
+	defending_country = player_input_enemy_country(attacking_from, player) # asks player which country they would like to attack	
+	number_of_dice = player_input_number(player,3, 0, 'number of dice to attack with')# asks player how many dice they would like to use	
+	stopping_point = player_input_number(player, int(countries_data[attacking_from].armies-number_of_dice), 0,'the number of armies you want remaining after the attack') # asks player what point to stop the attack	
+	
+	attack_result = rr.attack(countries_data[attacking_from].armies, countries_data[defending_country].armies,number_of_dice,stopping_point)  # calls risk roller
 
+	if attack_result['defender_armies'] == 0: # if attacker wins
+		print(player.name, 'wins with', attack_result['attacker_armies'], 'armies remaining' )
+		countries_data[defending_country].owner = player.name
+		number_of_occupying_armies = player_input_number(player, attack_result['attacker_armies']-1, attack_result['attacker_dice_count'] ,'the number of armies you want to move')
+		countries_data[defending_country].armies = number_of_occupying_armies
+		countries_data[attacking_from].armies =  attack_result['attacker_armies'] - number_of_occupying_armies
+		player.country_count += 1
+		countries_data[defending_country].owner.country_count -= 1
+		
+	else: # if defender wins
+		print('Attack stopped. ', player.name, 'has', attack_result['attacker_armies'], 'armies remaining. ', countries_data[defending_country].owner.name, 'has ', attack_result['defender_armies'], 'remaining.')
+		countries_data[attacking_from].armies = attack_result['attacker_armies']
+		countries_data[defending_country].armies = attack_result['defender_armies']	 
 
-	#asks player how many dice they would like to use
-
-	#calls risk roller
+def player_input_y_or_n(player, message):
+	while True:
+		player_input = input(player.name + ', Would you like to ' + message + ', Y/N? >').lower().rstrip()
+		if player_input == 'y' or player_input == 'n':
+			break
+		else:
+			print('ERROR: Please enter either a y (for yes) or a n (for no)')
+	
+	return (player_input)
 
 def main():
-	game_round = 1
+	round_count = 1
 
 	while player_1.country_count >0 or player_2.country_count > 0:
 		for p in players: # Player 1 goes first
-			print('Round', math.floor(game_round), '.', p.name + '\'s turn to attack.')
+			print('Round', math.floor(round_count), '.', p.name + '\'s turn to attack.')
 			
 			if len(countries) == 2:
-				if math.floor(game_round) != 1:
+				if math.floor(round_count) != 1:
 						reinforce(p)
 						print_playing_board()
 			else:
 				reinforce(p)
 				print_playing_board()
 
-			'''
-			########################
+			while True:
+				attack_this_round = player_input_y_or_n(p,'attack a country')
+				if attack_this_round == 'y':
+					attack(p)
+					print_playing_board()
+				else:
+					break
 
-			INSERT REST OF GAME HERE
+			print('round for', p.name, 'complete.')
+			round_count +=0.5
+	
+	if player_1.country_count == 0:
+		print_playing_board()
+		print('After',str(round_count),'rounds.',player_2.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
 
-			########################
+	if player_2.country_count == 0:
+		print_playing_board()
+		print('After',str(round_count),'rounds.',player_1.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
 
-			'''
-
-
-			game_round +=0.5
-
-	# Else (one player has lost all her countries)
-		
-		#Game Over, player [who has won] wins!
 
 #INITIALISES MAP
 map = {
