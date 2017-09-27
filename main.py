@@ -44,7 +44,7 @@ def player_input_own_country(player, message):
 	
 	return (player_input_country)
 
-def player_input_number(player,max_number, min_number, message):
+def player_input_number(player,max_number, min_number, message):	
 	while True:
 		try:
 			player_input_number = int(input(str(player.name) + ', Please enter '  + message  + '. Maximum: ' +str(max_number) + '>'))
@@ -132,7 +132,40 @@ def player_input_y_or_n(player, message):
 	
 	return (player_input)
 
+def player_can_attack(player):
+
+	#for : #cycles through player's countries
+
+	#if player has a country with more than one army:
+
+	attack_ready = True
+
+	#else: 
+		#attack_ready = False
+
+	return attack_ready
+
 def main():
+
+	#INITIALISES PLAYERS
+	player_1 = player(input('Enter name for Player 1 > ').title(),0)
+	player_2 = player(input('Enter name for Player 2 > ').title(),0)
+	players = [player_1, player_2]
+
+	#INITIALISES STARTING POSITIONS
+	while len(available_countries) != 0: #cycles through the players, assigning them a random country (that already has one occupying army)
+		for p in players:
+			countrySelector(p)y
+
+		print_playing_board()
+
+	#OPENING REINFORCEMENT
+	for p in players:  
+		reinforce(p)
+
+	print_playing_board()
+
+
 	round_count = 1
 
 	while player_1.country_count >0 or player_2.country_count > 0:
@@ -158,16 +191,16 @@ def main():
 					break
 
 			print('round for', p.name, 'complete.')
+			if player_1.country_count == 0 or player_2.country_count == 0:
+				break
 			round_count +=0.5
 	
-		if player_1.country_count == 0:
-			print_playing_board()
+		if player_1.country_count == 0:			
 			print('After',str(round_count),'rounds.',player_2.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
 			return
 
 		elif player_2.country_count == 0:
-			print_playing_board()
-			print('After',str(round_count),'rounds.',player_1.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+			print('After',str(math.floor(round_count)),'rounds.',player_1.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
 			return
 
 
@@ -183,25 +216,6 @@ for c in [makeCountries(country_name,neighbours) for country_name, neighbours in
 
 countries = [c for c in countries_data.keys()]
 available_countries = list(countries)
-
-#INITIALISES PLAYERS
-
-player_1 = player(input('Enter name for Player 1 > ').title(),0)
-player_2 = player(input('Enter name for Player 2 > ').title(),0)
-players = [player_1, player_2]
-
-#INITIALISES STARTING POSITIONS
-while len(available_countries) != 0: #cycles through the players, assigning them a random country (that already has one occupying army)
-	for p in players:
-		countrySelector(p)
-
-print_playing_board()
-
-#OPENING REINFORCEMENT
-for p in players:  
-	reinforce(p)
-
-print_playing_board()
 
 # LET THE BATTLE COMMENCE
 if __name__ == '__main__':
