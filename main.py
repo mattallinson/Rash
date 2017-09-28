@@ -132,16 +132,28 @@ def player_input_y_or_n(player, message):
 	
 	return (player_input)
 
+def player_countries(player):
+
+	player_countries = []
+	
+	for c in country_list:
+		if c.owner == player:
+			player_countries.append(c)
+
+	return player_countries
+
 def player_can_attack(player):
+	
+	countries_can_attack = 0
+	for pc in player_countries(player):
+		if pc.armies > 1:
+			countries_can_attack +=1
 
-	#for : #cycles through player's countries
+	if countries_can_attack > 0:
+		attack_ready = True
 
-	#if player has a country with more than one army:
-
-	attack_ready = True
-
-	#else: 
-		#attack_ready = False
+	else: 
+		attack_ready = False
 
 	return attack_ready
 
@@ -155,7 +167,7 @@ def main():
 	#INITIALISES STARTING POSITIONS
 	while len(available_countries) != 0: #cycles through the players, assigning them a random country (that already has one occupying army)
 		for p in players:
-			countrySelector(p)y
+			countrySelector(p)
 
 		print_playing_board()
 
@@ -181,11 +193,14 @@ def main():
 				print_playing_board()
 
 			while True:
-				attack_this_round = player_input_y_or_n(p,'attack a country')
-				if attack_this_round == 'y':
-					attack(p)
-					print_playing_board()
-					if player_1.country_count == 0 or player_2.country_count == 0:
+				if player_can_attack(player):
+					attack_this_round = player_input_y_or_n(p,'attack a country')
+					if attack_this_round == 'y':
+						attack(p)
+						print_playing_board()
+						if player_1.country_count == 0 or player_2.country_count == 0:
+							break
+					else:
 						break
 				else:
 					break
@@ -210,8 +225,9 @@ map = {
 	'West':['East']
 }
 
+country_list = [makeCountries(country_name,neighbours) for country_name, neighbours in map.items()]
 countries_data = {} # returns a dictionary in the form {Country: <territoryObject>}
-for c in [makeCountries(country_name,neighbours) for country_name, neighbours in map.items()]:
+for c in country_list:
 	countries_data[str(c.name)] = c
 
 countries = [c for c in countries_data.keys()]
