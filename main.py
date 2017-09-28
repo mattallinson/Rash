@@ -96,11 +96,19 @@ def player_input_enemy_country(attacking_country, player):
 	
 	return (player_input_country)
 
+def max_dice(country):
+	if country.armies > 3:
+		max_dice = 3
+	else:
+		max_dice = country.armies -1 
+
+	return max_dice
+
 def attack(player):
 	
 	attacking_from = player_input_own_country(player,'attack from') # ask player which country they want to attack from
 	defending_country = player_input_enemy_country(attacking_from, player) # asks player which country they would like to attack	
-	number_of_dice = player_input_number(player,3, 0, 'number of dice to attack with')# asks player how many dice they would like to use	
+	number_of_dice = player_input_number(player,max_dice(countries_data[attacking_from]), 0, 'number of dice to attack with')# asks player how many dice they would like to use	
 	stopping_point = player_input_number(player, int(countries_data[attacking_from].armies-number_of_dice), 0,'the number of armies you want remaining after the attack') # asks player what point to stop the attack	
 	
 	attack_result = rr.attack(countries_data[attacking_from].armies, countries_data[defending_country].armies,number_of_dice,stopping_point)  # calls risk roller

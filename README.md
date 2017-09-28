@@ -4,14 +4,14 @@ Slowly but surely I will build a game of Risk that will be playable online.
 Version 1 will be coded in python and playable in the command line. 
 
 ## Table of Contents
-* [Risk Roller](#RiskRoller])
+* [Rash Roller](#RashRoller])
 * [Map](#Map)
 * [Game Mechanics](#game-mechanics) 
 * [AI Mechanics](#AI-Mechanics)
 
 
-## RiskRoller
-A python coded dice roller for Risk
+## RasgRoller
+A python coded dice roller for Risk-type games, such as Rash.
 
 Uses the Python inbuilt random number generater to create rolls and compares the result. Will stop when either the defender runs out of armies, or the number of attacking armies drops below 4.
 
@@ -22,13 +22,7 @@ Uses the Python inbuilt random number generater to create rolls and compares the
 
 ## Map
 
-Initial version of this game will just use the standard Risk map for Africa & South America except Madagascar will be excluded (it's uninhabitable after [a mysterious pandemic](https://gaming.stackexchange.com/questions/24904/how-do-i-infect-madagascar)) 
-* **South America**
-  * Venezuela, Brazil, Peru, Argentina
-* **Africa**
-  * North Africa, Egypt, East Africa, Congo, South Africa
 
-Information stored in map.py  
 
 ## Game Mechanics
 
