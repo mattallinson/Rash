@@ -4,7 +4,7 @@ import random
 import os
 import math
 from terminaltables import AsciiTable
-import RiskRoller as rr 
+import RashRoller as rr 
 
 class territory():
 
@@ -207,6 +207,8 @@ def main():
 					if attack_this_round == 'y':
 						attack(p)
 						print_playing_board()
+					else:
+						break
 					if player_1.country_count == 0 or player_2.country_count == 0:
 						break
 				else:
