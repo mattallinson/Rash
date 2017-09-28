@@ -4,7 +4,7 @@ import random
 import os
 import math
 from terminaltables import AsciiTable
-import RiskRoller as rr 
+import RashRoller as rr 
 
 class territory():
 
