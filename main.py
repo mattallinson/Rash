@@ -111,6 +111,7 @@ def attack(player):
 		player.country_count += 1
 		countries_data[defending_country].owner.country_count -= 1
 		if countries_data[defending_country].owner.country_count == 0:
+			countries_data[defending_country].armies = 0
 			return
 		number_of_occupying_armies = player_input_number(player, attack_result['attacker_armies']-1, attack_result['attacker_dice_count'] ,'the number of armies you want to move')
 		countries_data[defending_country].armies = number_of_occupying_armies
@@ -159,7 +160,7 @@ def player_can_attack(player):
 
 def main():
 
-	#INITIALISES PLAYERS
+	#INITIALISES l
 	player_1 = player(input('Enter name for Player 1 > ').title(),0)
 	player_2 = player(input('Enter name for Player 2 > ').title(),0)
 	players = [player_1, player_2]
@@ -193,17 +194,16 @@ def main():
 				print_playing_board()
 
 			while True:
-				if player_can_attack(player):
+				if player_can_attack(p):
 					attack_this_round = player_input_y_or_n(p,'attack a country')
 					if attack_this_round == 'y':
 						attack(p)
 						print_playing_board()
-						if player_1.country_count == 0 or player_2.country_count == 0:
-							break
-					else:
+					if player_1.country_count == 0 or player_2.country_count == 0:
 						break
 				else:
 					break
+
 
 			print('round for', p.name, 'complete.')
 			if player_1.country_count == 0 or player_2.country_count == 0:
