@@ -23,12 +23,12 @@ The Map for version 1 of the game is called **The Cold War: _Abridged_**.
 It consists of two territories, *East* & *West*. 
 
 ## Further Work
-*Version 2 will consist of a new map **The Battle for Sodor** and will have a code update that can support any arbitrary size of map. It will also feature 3 players, 2 human players and 1 non-attacking computer player. It will still be played in the command line
-*Version 3 will feature a computer player that will launch its own attacks. If this aggressive computer player will be any good remains to be seen.
-*Version 4 will use pygame to create a GUI, and will drag this game kicking and screaming out of its early 1970s aesthetic and into a late 1970s one.  
+* Version 2 will consist of a new map **The Battle for Sodor** and will have a code update that can support any arbitrary size of map. It will also feature 3 players, 2 human players and 1 non-attacking computer player. It will still be played in the command line
+* Version 3 will feature a computer player that will launch its own attacks. If this aggressive computer player will be any good remains to be seen.
+* Version 4 will use pygame to create a GUI, and will drag this game kicking and screaming out of its early 1970s aesthetic and into a late 1970s one.  
 
 **__Also__**:
-*eRashRoller, when I get round to learning Django, I want to make a web interface version of RashRoller for all those times when you need to play games of _Risk_ quickly on the go.
+eRashRoller, when I get round to learning Django, I want to make a web interface version of RashRoller for all those times when you need to play games of _Risk_ quickly on the go.
 
 ## RashRoller
 A python coded dice roller for Risk-type games, such as Rash.
