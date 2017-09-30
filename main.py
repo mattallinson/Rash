@@ -9,6 +9,7 @@ import RashRoller as rr
 class territory():
 
 	def __init__(self, name, neighbours, owner, armies): # Countries have a name, neighbours, owners and armies
+		
 		self.name = name
 		self.neighbours = neighbours
 		self.owner = owner
@@ -36,7 +37,7 @@ def countrySelector(player):
 
 def player_input_own_country(player, message):
 	while True:
-			player_input_country = input(player.name + ', What country would you like to ' + message +'?  >').title()
+			player_input_country = input(player.name + ', What country would you like to ' + message +'? >\t').title()
 			if player_input_country in countries and countries_data[player_input_country].owner.name == player.name:
 				break
 			else:
@@ -47,7 +48,7 @@ def player_input_own_country(player, message):
 def player_input_number(player,max_number, min_number, message):	
 	while True:
 		try:
-			player_input_number = int(input(str(player.name) + ', Please enter '  + message  + '. Maximum: ' +str(max_number) + '>'))
+			player_input_number = int(input(str(player.name) + ', Please enter '  + message  + '. Maximum: ' +str(max_number) + '>\t'))
 			if player_input_number <= max_number and player_input_number >= min_number:
 				break
 			else:
@@ -58,6 +59,7 @@ def player_input_number(player,max_number, min_number, message):
 	return (player_input_number)
 
 def reinforce(player):
+	#print_playing_board()
 	max_armies = math.floor(player.country_count/3)+3
 
 	while max_armies > 0:
@@ -74,11 +76,12 @@ def reinforce(player):
 		max_armies -= armies_to_reinforce
 
 	print('Reinforcement for', player.name, 'is complete.\n')
+	clearScreen()
 
-def print_playing_board(): #I would love for this to be able any size map
+def print_playing_board(): #I would love for this to be able any size game_map
 
 	table_data = [
-	['map', ''],
+	['Map', ''],
 	[countries_data['West'].output(),countries_data['East'].output()]
 	]
 
@@ -88,7 +91,7 @@ def print_playing_board(): #I would love for this to be able any size map
 
 def player_input_enemy_country(attacking_country, player):
 	while True:
-		player_input_country = input(player.name + ', What country would you like to attack? >').title()
+		player_input_country = input(player.name + ', What country would you like to attack? >\t').title()
 		if player_input_country in countries and countries_data[player_input_country].owner.name != player.name and attacking_country in countries_data[player_input_country].neighbours:
 			break
 		else:
@@ -111,6 +114,7 @@ def attack(player):
 	number_of_dice = player_input_number(player,max_dice(countries_data[attacking_from]), 0, 'number of dice to attack with')# asks player how many dice they would like to use	
 	stopping_point = player_input_number(player, int(countries_data[attacking_from].armies-number_of_dice), 0,'the number of armies you want remaining after the attack') # asks player what point to stop the attack	
 	
+	clearScreen()
 	attack_result = rr.attack(countries_data[attacking_from].armies, countries_data[defending_country].armies,number_of_dice,stopping_point)  # calls risk roller
 
 	if attack_result['defender_armies'] == 0: # if attacker wins
@@ -133,7 +137,7 @@ def attack(player):
 
 def player_input_y_or_n(player, message):
 	while True:
-		player_input = input(player.name + ', Would you like to ' + message + ', Y/N? >').lower().rstrip()
+		player_input = input(player.name + ', Would you like to ' + message + ', Y/N? > \t').lower().rstrip()
 		if player_input == 'y' or player_input == 'n':
 			break
 		else:
@@ -166,24 +170,38 @@ def player_can_attack(player):
 
 	return attack_ready
 
+def clearScreen():
+	tmp = os.system('clear')
+
+def pauseGame():
+
+	tmp = input('\t Press \'Enter\' to continue:')
+
 def main():
+
+	clearScreen()
+	print('Hello and welcome to', '\033[1m', '\033[91m', '\nRash: Version 1 \nThe Cold War: Abridged\n','\033[0m',)
 
 	#INITIALISES l
 	player_1 = player(input('Enter name for Player 1 > ').title(),0)
 	player_2 = player(input('Enter name for Player 2 > ').title(),0)
 	players = [player_1, player_2]
 
+	clearScreen()
+
+
 	#INITIALISES STARTING POSITIONS
 	while len(available_countries) != 0: #cycles through the players, assigning them a random country (that already has one occupying army)
 		for p in players:
 			countrySelector(p)
-
-		print_playing_board()
+		
 
 	#OPENING REINFORCEMENT
 	for p in players:  
+		print_playing_board()
 		reinforce(p)
 
+	clearScreen()
 	print_playing_board()
 
 
@@ -206,7 +224,7 @@ def main():
 					attack_this_round = player_input_y_or_n(p,'attack a country')
 					if attack_this_round == 'y':
 						attack(p)
-						print_playing_board()
+						#print_playing_board()
 					else:
 						break
 					if player_1.country_count == 0 or player_2.country_count == 0:
@@ -219,23 +237,29 @@ def main():
 			if player_1.country_count == 0 or player_2.country_count == 0:
 				break
 			round_count +=0.5
+			pauseGame()
+			print_playing_board()
+			clearScreen()
+			print_playing_board()
 	
 		if player_1.country_count == 0:			
-			print('After',str(round_count),'rounds.',player_2.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+			print('After',str(math.floor(round_count)),'rounds.',player_2.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+			print_playing_board()
 			return
 
 		elif player_2.country_count == 0:
 			print('After',str(math.floor(round_count)),'rounds.',player_1.name, 'wins!!!!\n!!!!!!!!!!!!!!!')
+			print_playing_board()
 			return
 
 
 #INITIALISES MAP
-map = {
+game_map = {
 	'East':['West'],
 	'West':['East']
 }
 
-country_list = [makeCountries(country_name,neighbours) for country_name, neighbours in map.items()]
+country_list = [makeCountries(country_name,neighbours) for country_name, neighbours in game_map.items()]
 countries_data = {} # returns a dictionary in the form {Country: <territoryObject>}
 for c in country_list:
 	countries_data[str(c.name)] = c
