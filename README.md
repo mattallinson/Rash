@@ -13,8 +13,8 @@
 ## Installation
 
 1. [Download this repository](https://github.com/mattallinson/Rash/archive/master.zip) and unzip it. 
-2. Install terminal tables using `pip install terminal-tables` (For further information, please visit [their website](https://pypi.python.org/pypi/terminaltables))
-3. In the command line, change direcctory to the folder containing all the files from the repo and enter `python main.py`
+2. In the command line, change direcctory to the folder containing all the files from the repo and enter `pip install -r requests.txt`
+3. Once the required libraries are installed, enter `python3 main.py`
 4. You're on your way. Good luck, noble warrior.
 
 ## Map

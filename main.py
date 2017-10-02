@@ -4,6 +4,7 @@ import random
 import os
 import math
 from terminaltables import AsciiTable
+from colorama import init, Fore, Back, Style
 import RashRoller as rr 
 
 class territory():
@@ -22,7 +23,7 @@ class player():
 
 	def __init__(self,name,country_count):
 		self.name = name
-		self.country_count = country_count
+		self.country_count = country_count		
 
 def makeCountries(country_name, neighbours):
 	country = territory(str(country_name),neighbours, None, 1)
@@ -115,6 +116,7 @@ def attack(player):
 	stopping_point = player_input_number(player, int(countries_data[attacking_from].armies-number_of_dice), 0,'the number of armies you want remaining after the attack') # asks player what point to stop the attack	
 	
 	clearScreen()
+	print_playing_board()
 	attack_result = rr.attack(countries_data[attacking_from].armies, countries_data[defending_country].armies,number_of_dice,stopping_point)  # calls risk roller
 
 	if attack_result['defender_armies'] == 0: # if attacker wins
@@ -171,11 +173,33 @@ def player_can_attack(player):
 	return attack_ready
 
 def clearScreen():
-	tmp = os.system('cls' if os.name == 'nt' else 'clear')
+	tmp = os.system('cls' if os.name == 'nt' else 'clear') #checks operating system and returns the appropriate clear screen operator
 
 def pauseGame():
 
 	tmp = input('\t Press \'Enter\' to continue:')
+
+def player_print(player, message):
+
+	if player == player_1:
+		print(Fore.RED + message)
+
+	elif player == player_2:
+		print(Fore.GREEN + message)
+	else:
+		print(Style.RESET_ALL)
+		print(message)
+
+def player_input(player, message):
+
+	if player == player_1:
+		input(Fore.RED + message + Style.RESET_ALL)
+
+	elif player == player_2:
+		input(Fore.GREEN + message + Style.RESET_ALL)
+	else:
+		print(Style.RESET_ALL)
+		input(message)
 
 def main():
 
@@ -183,8 +207,8 @@ def main():
 	print('Hello and welcome to\nRash: Version 1 \nThe Cold War: Abridged')
 
 	#INITIALISES l
-	player_1 = player(input('Enter name for Player 1 > ').title(),0)
-	player_2 = player(input('Enter name for Player 2 > ').title(),0)
+	player_1 = player(input(Fore.RED + 'Enter name for Player 1 > '+ Style.RESET_ALL).title(),0,)
+	player_2 = player(input(Fore.GREEN + 'Enter name for Player 2 > '+ Style.RESET_ALL).title(),0,)
 	players = [player_1, player_2]
 
 	clearScreen()
@@ -203,7 +227,6 @@ def main():
 
 	clearScreen()
 	print_playing_board()
-
 
 	round_count = 1
 
@@ -259,6 +282,8 @@ game_map = {
 	'East':['West'],
 	'West':['East']
 }
+
+init(autoreset=True) #sets up Colorama to retun to default color after use
 
 country_list = [makeCountries(country_name,neighbours) for country_name, neighbours in game_map.items()]
 countries_data = {} # returns a dictionary in the form {Country: <territoryObject>}
