@@ -171,7 +171,7 @@ def player_can_attack(player):
 	return attack_ready
 
 def clearScreen():
-	tmp = os.system('clear')
+	tmp = os.system('cls' if os.name == 'nt' else 'clear')
 
 def pauseGame():
 
@@ -180,7 +180,7 @@ def pauseGame():
 def main():
 
 	clearScreen()
-	print('Hello and welcome to', '\033[1m', '\033[91m', '\nRash: Version 1 \nThe Cold War: Abridged\n','\033[0m',)
+	print('Hello and welcome to\nRash: Version 1 \nThe Cold War: Abridged')
 
 	#INITIALISES l
 	player_1 = player(input('Enter name for Player 1 > ').title(),0)
@@ -252,6 +252,7 @@ def main():
 			print_playing_board()
 			return
 
+	pauseGame()
 
 #INITIALISES MAP
 game_map = {
